@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Company Discussion Board</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
+}
+
+body{
+background:#f2f2f2;
+}
+
+/* HEADER */
+
+header{
+background:#fdb10d;
+color:white;
+display:flex;
+align-items:center;
+padding:15px;
+}
+
+.logo{
+width:50px;
+height:50px;
+background:white;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+margin-right:10px;
+overflow:hidden;
+}
+
+.logo img{
+width:100%;
+}
+
+.title{
+font-size:20px;
+font-weight:bold;
+}
+
+/* MAIN */
+
+.container{
+max-width:700px;
+margin:auto;
+padding:20px;
+}
+
+/* INPUT BOX */
+
+.inputBox{
+background:white;
+padding:15px;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+textarea{
+width:100%;
+height:100px;
+padding:10px;
+border-radius:5px;
+border:1px solid #ccc;
+resize:none;
+}
+
+button{
+margin-top:10px;
+padding:10px 20px;
+border:none;
+background:#fda90d;
+color:white;
+border-radius:5px;
+cursor:pointer;
+}
+
+/* POSTS */
+
+.posts{
+margin-top:20px;
+}
+
+.post{
+background:white;
+padding:15px;
+border-radius:10px;
+margin-bottom:10px;
+box-shadow:0 0 5px rgba(0,0,0,0.1);
+}
+
+.date{
+font-size:12px;
+color:gray;
+margin-bottom:5px;
+}
+
+.deleteBtn{
+margin-top:10px;
+background:red;
+padding:6px 12px;
+font-size:14px;
+}
+
+@media(max-width:600px){
+
+.title{
+font-size:18px;
+}
+
+textarea{
+height:80px;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">
+<img src="https://i.postimg.cc/fyxqFykG/logo-1632932145-96613.webp">
+</div>
+
+<div class="title">
+Company Discussion Board
+</div>
+
+</header>
+
+<div class="container">
+
+<div class="inputBox">
+
+<textarea id="message" placeholder="Write company discussion or instruction..."></textarea>
+
+<button onclick="addPost()">Submit</button>
+
+</div>
+
+<div class="posts" id="posts"></div>
+
+</div>
+
+<script>
+
+function loadPosts(){
+
+let posts = JSON.parse(localStorage.getItem("companyPosts")) || []
+
+let postContainer = document.getElementById("posts")
+
+postContainer.innerHTML=""
+
+posts.slice().reverse().forEach((post,index)=>{
+
+let realIndex = posts.length - 1 - index
+
+let div = document.createElement("div")
+
+div.className="post"
+
+div.innerHTML=`
+
+<div class="date">${post.date}</div>
+
+<div>${post.text}</div>
+
+<button class="deleteBtn" onclick="deletePost(${realIndex})">Delete</button>
+
+`
+
+postContainer.appendChild(div)
+
+})
+
+}
+
+function addPost(){
+
+let message = document.getElementById("message").value
+
+if(message==""){
+
+alert("Write something")
+
+return
+
+}
+
+let posts = JSON.parse(localStorage.getItem("companyPosts")) || []
+
+let data={
+
+text:message,
+
+date:new Date().toLocaleString()
+
+}
+
+posts.push(data)
+
+localStorage.setItem("companyPosts",JSON.stringify(posts))
+
+document.getElementById("message").value=""
+
+loadPosts()
+
+}
+
+function deletePost(index){
+
+let posts = JSON.parse(localStorage.getItem("companyPosts")) || []
+
+if(confirm("Delete this discussion?")){
+
+posts.splice(index,1)
+
+localStorage.setItem("companyPosts",JSON.stringify(posts))
+
+loadPosts()
+
+}
+
+}
+
+loadPosts()
+
+</script>
+
+</body>
+
+</html>
